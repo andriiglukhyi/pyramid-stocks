@@ -2,7 +2,7 @@
 
 
 **Author** : Andrii Glukhyi
-**Version**: 0.1.0
+**Version**: 0.2.0
 
 ## Overview
 create a stock portfolio app with python using cookiecutter and the pyramid framework.

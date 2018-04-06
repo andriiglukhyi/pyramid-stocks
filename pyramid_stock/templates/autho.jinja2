@@ -1,0 +1,20 @@
+ {% extends "base.jinja2" %}
+
+{% block content %}
+<h1>Registration</h1>
+    <form class="register">
+      <label for="login">Username</label>
+      <input class="input" type="text" name="login" placeholder="enter username">
+      <label for="password">Password</label>
+      <input class="input" type="number" name="password" placeholder="password" required>
+      <label for="password-validation">Please confirm your password</label>
+      <input class="input" type="number" name="password-validation" placeholder="repeat password">    
+      <input class="input" type="submit" value="Submit">
+    </form> 
+<h1>Sign-in</h1>
+  <form class="login">
+    <input type="text" name="login">
+    <input type="number" name="password">
+    <input type="submit" value="Submit">
+  </form> 
+{% endblock content %}

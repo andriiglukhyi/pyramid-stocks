@@ -28,9 +28,9 @@ tests_require = [
 ]
 
 setup(
-    name='pyramid_stock',
-    version='0.0.0',
-    description='pyramid_stock',
+    name='learning_journal',
+    version='0.0',
+    description='learning_journal',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
         'Programming Language :: Python',
@@ -51,10 +51,10 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = pyramid_stock:main',
+            'main = learning_journal:main',
         ],
         'console_scripts': [
-            'initialize_pyramid_stock_db = pyramid_stock.scripts.initializedb:main',
+            'initialize_learning_journal_db = learning_journal.scripts.initializedb:main',
         ],
     },
 )
