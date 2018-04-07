@@ -6,15 +6,14 @@ import requests
 
 API_URL = ' https://api.iextrading.com/1.0'
 
-ADD = ''
-
 
 @view_config(
     route_name='home',
     renderer='../templates/base.jinja2',
     request_method='GET')
 def home_view(request):
-    return {'OK'}
+    return {'text': 'OK',
+            'status': 200}
 
 
 @view_config(
@@ -50,7 +49,6 @@ def entries_view(request):
     if request.method == 'GET':
         return {'stock': MOCK_DATA}
     if request.method == 'POST':
-        # import pdb; pdb.set_trace()
         symbol = request.POST['symbol']
         response = requests.get(API_URL + '/stock/{}/company'.format(symbol))
         data = response.json()
@@ -78,7 +76,11 @@ def new_view(request):
     renderer='../templates/stock-details.jinja2',
     request_method='GET')
 def detail_view(request):
-    que = request.matchdict['symbol']
-    for item in MOCK_DATA:
-        if item['symbol'] == que:
-            return {'lst': item}
+    try:
+        que = request.matchdict['symbol']
+        for item in MOCK_DATA:
+            if item['symbol'] == que:
+                return {'lst': item}
+        
+    except KeyError:
+        return {}
