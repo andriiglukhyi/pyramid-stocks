@@ -2,6 +2,9 @@ from pyramid.view import view_config
 from pyramid.response import Response
 from ..sample_data import MOCK_DATA
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+import requests
+
+API_URL = ' https://api.iextrading.com/1.0'
 
 
 @view_config(
@@ -9,8 +12,8 @@ from pyramid.httpexceptions import HTTPFound, HTTPNotFound
     renderer='../templates/base.jinja2',
     request_method='GET')
 def home_view(request):
-    return {'OK',
-}
+    return {'text': 'OK',
+            'status': 200}
 
 
 @view_config(
@@ -23,7 +26,7 @@ def auth_view(request):
             password = request.GET['password']
             print('User: {}, Pass: {}'.format(username, password))
 
-            return HTTPFound(location=request.route_url('entries'))
+            return HTTPFound(location=request.route_url('home'))
 
         except KeyError:
             return {}
@@ -41,12 +44,16 @@ def auth_view(request):
 
 @view_config(
     route_name='portfolio',
-    renderer='../templates/portfolio.jinja2',
-    request_method='GET')
+    renderer='../templates/portfolio.jinja2')
 def entries_view(request):
-    return {
-        'stock': MOCK_DATA
-        }
+    if request.method == 'GET':
+        return {'stock': MOCK_DATA}
+    if request.method == 'POST':
+        symbol = request.POST['symbol']
+        response = requests.get(API_URL + '/stock/{}/company'.format(symbol))
+        data = response.json()
+        MOCK_DATA.append(data)
+        return {'stock': MOCK_DATA}
 
 
 @view_config(
@@ -54,9 +61,14 @@ def entries_view(request):
     renderer='../templates/stock-add.jinja2',
     request_method='GET')
 def new_view(request):
-    return {
-        'status': 200
-    }
+    if request.method == 'GET':
+        try:
+            symbol = request.GET['symbol']
+        except KeyError:
+            return {}
+        response = requests.get(API_URL + '/stock/{}/company'.format(symbol))
+        data = response.json()
+        return {'company': data}
 
 
 @view_config(
@@ -64,7 +76,11 @@ def new_view(request):
     renderer='../templates/stock-details.jinja2',
     request_method='GET')
 def detail_view(request):
-    que = request.matchdict['symbol']
-    for item in MOCK_DATA:
-        if item['symbol'] == que:
-            return {'lst': item}
+    try:
+        que = request.matchdict['symbol']
+        for item in MOCK_DATA:
+            if item['symbol'] == que:
+                return {'lst': item}
+        
+    except KeyError:
+        return {}

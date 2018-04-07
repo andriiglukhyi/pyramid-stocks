@@ -1,9 +1,25 @@
 {% extends "base.jinja2" %}
 
 {% block content %}
-  <p>Add a ticker</p>
-  <form>
-    <input type="text" name="add-ticker" required>
-    <button class="submit-ticker">Add to Portfolio</button>
-  </form>
+<form action="{{request.route_url('stock-add')}}" method="GET">
+  <input type="text" name="symbol" placeholder="MSFT">
+  <button type="submit">search</button>
+</form>
+
+{% if company %}
+  <h1>Details about {{company.companyName}}</h1>
+    <p>{{company.CEO}} {{company.exchange}}</p>
+    <p>{{company.industry}}</p>
+    <p>{{company.website}}</p>
+    <p>{{company.issueType}}</p>
+    <p>{{company.sector}}</p>
+    <p>{{company.description}}</p>
+    <p>{{company.symbol}}</p>
+    <form id='hiden'action="{{request.route_url('portfolio')}}" method="POST">
+    <input type='hidden' name="symbol" value="{{company.symbol}}">
+    <button type="submit">add</button>
+    </form>
+    <!-- <p><a href="{{request.route_url('portfolio', symbol=company.symbol)}}">add</a></p> -->
+{% endif %}
 {% endblock content %}
+
