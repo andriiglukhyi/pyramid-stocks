@@ -1,27 +1,28 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Lab 8</title>
     <title>Stock portfolio</title>
     <link rel="stylesheet" href="{{request.static_url('pyramid_stock:static/base.css')}}">
     <link rel="stylesheet" href="{{request.static_url('pyramid_stock:static/reset.css')}}">
+    <link rel="stylesheet" href="{{request.static_url('pyramid_stock:static/layot.css')}}">
+    <link rel="stylesheet" href="{{request.static_url('pyramid_stock:static/modules.css')}}">
 </head>
 <body>
     <header>
-        <h1>Hi this is my app</h1>
-        <h4>Need more data</h4>
     </header> 
     <main>
       <nav>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/autho">login</a></li>
-        <li><a href="/portfolio">Entries</a></li>
-        <li><a href="/add">New</a></li>
+        <li><a href="/">HOME</a></li>
+        <li><a href="/autho">LOGIN</a></li>
+        <li><a href="/portfolio">PORTFOLIO</a></li>
+        <li><a href="/stock-add">ADD NEW</a></li>
       </ul>
     </nav>
+        <h1>Hi this is my app</h1>
+        <h4>Need more data</h4>
     {% block content %}
     <p>No content</p>
     {% endblock content %}
