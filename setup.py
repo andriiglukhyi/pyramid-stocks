@@ -10,11 +10,13 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'plaster_pastedeploy',
+    'psycopg2',
     'pyramid >= 1.9a',
     'pyramid_debugtoolbar',
     'pyramid_jinja2',
     'pyramid_retry',
     'pyramid_tm',
+    'requests',
     'SQLAlchemy',
     'transaction',
     'zope.sqlalchemy',
@@ -51,10 +53,10 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = learning_journal:main',
+            'main = pyramid_stock:main',
         ],
         'console_scripts': [
-            'initialize_learning_journal_db = learning_journal.scripts.initializedb:main',
+            'initdb = pyramid_stock.scripts.initializedb:main',
         ],
     },
 )
