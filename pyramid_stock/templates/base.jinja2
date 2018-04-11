@@ -16,9 +16,13 @@
       <nav>
       <ul>
         <li><a href="/">HOME</a></li>
-        <li><a href="/autho">LOGIN</a></li>
+        {% if request.authenticated_userid %}
         <li><a href="/portfolio">PORTFOLIO</a></li>
         <li><a href="/stock-add">ADD NEW</a></li>
+        <li><a href="/logout">LOUGOUT</a></li>
+        {% else %}
+        <li><a href="/autho">LOGIN</a></li>
+        {% endif %}
       </ul>
     </nav>
         <h1>Hi this is my app</h1>
