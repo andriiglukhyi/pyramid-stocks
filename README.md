@@ -2,7 +2,7 @@
 
 
 **Author** : Andrii Glukhyi
-**Version**: 0.3.0
+**Version**: 0.4.0
 
 ## Overview
 create a stock portfolio app with python using cookiecutter and the pyramid framework.
@@ -24,7 +24,8 @@ cookiecutter
 venv = ENV
 
 ## API
-None at this time
+
+API_URL = ' https://api.iextrading.com/1.0'
 
 ## Change log
 105ecbb (HEAD -> class-13-pyramid-views) scaffold. readme, cookiecutter, pyramid routes and GET paths

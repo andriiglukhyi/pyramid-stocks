@@ -2,8 +2,9 @@
 
 {% block content %}
 <form action="{{request.route_url('stock-add')}}" method="GET">
-  <input type="text" name="symbol" placeholder="MSFT">
-  <button type="submit">search</button>
+<input type="hidden" name="csrf_token" value="{{request.session.get_csrf_token()}}">
+<input type="text" name="symbol" placeholder="MSFT">
+<button type="submit">search</button>
 </form>
 
 {% if company %}
@@ -17,6 +18,7 @@
     <p>{{company.symbol}}</p>
     <form id='hiden'action="{{request.route_url('portfolio')}}" method="POST">
     <input type='hidden' name="symbol" value="{{company.symbol}}">
+    <input type="hidden" name="csrf_token" value="{{request.session.get_csrf_token()}}">
     <button type="submit">add</button>
     </form>
     <!-- <p><a href="{{request.route_url('portfolio', symbol=company.symbol)}}">add</a></p> -->
