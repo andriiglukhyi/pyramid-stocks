@@ -15,7 +15,6 @@ from .meta import Base
 
 class Stock(Base):
     __tablename__ = 'stock'
-    account_id = Column(Text, ForeignKey('account.username'), nullable=False)
     id = Column(Integer, primary_key=True)
     symbol = Column(String, nullable=False, unique=True)
     companyName = Column(String)

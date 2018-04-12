@@ -18,14 +18,9 @@ def entries_view(request):
     """portfolio wiwth all the stuff"""
     if request.method == 'GET':
         """get request to portfolio page"""
-        try:
-            query = request.dbsession.query(association_table)
-            stocks = query(Stock).join(Account).all()
-            
-        except DBAPIError:
-            return DBAPIError(DB_ERR_MSG, content_type='text/plain', status=500)
-
-        return {'stock': stocks}
+        user = request.dbsession.query(Account).filter(
+                Account.username == request.authenticated_userid).first()
+        return {'stock': user.stock}
 
     if request.method == 'POST':
         """post request to portfolio page"""
@@ -39,14 +34,13 @@ def entries_view(request):
             query = request.dbsession.query(Stock)
             stock = query.filter(Stock.symbol == symbol).one_or_none()
             if stock is None:
-                items = response.json()
-                items['account_id'] = request.authenticated_userid
-                stock = Stock(**items)
+                stock = Stock(**response.json())
                 request.dbsession.add(stock)
             else:
                 for key, value in response.json().items():
                     setattr(stock, key, value)
-                stock.account.append(user)
+            stock.account.append(user)
+            request.dbsession.flush()
             return HTTPFound(location=request.route_url('portfolio'))
         raise HTTPServiceUnavailable     
 
@@ -78,7 +72,6 @@ def detail_view(request):
     except KeyError:
         return HTTPNotFound()
     try:
-        import pdb; pdb.set_trace()
         query = request.dbsession.query(Stock)
         entry_detail = query.filter(Stock.account_id == request.authenticated_userid).filter(Stock.symbol == entry_id).one_or_none()
 
