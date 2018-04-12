@@ -1,11 +1,10 @@
-from pyramid.httpexceptions import HTTPFound, HTTPBadRequest, HTTPUnauthorized, HTTPNotFound
+from pyramid.httpexceptions import HTTPFound, HTTPBadRequest, HTTPUnauthorized
 from pyramid.security import NO_PERMISSION_REQUIRED, remember, forget
 from pyramid.response import Response
-from sqlalchemy.exc import DBAPIError
+from sqlalchemy.exc import DBAPIError, IntegrityError
 from pyramid.view import view_config
 from ..models import Account
 from . import DB_ERR_MSG
-
 
 @view_config(
     route_name='autho',
@@ -44,14 +43,16 @@ def auth_view(request):
             )
 
             headers = remember(request, userid=instance.username)
-            request.dbsession.add(instance)
+            try:
+                request.dbsession.add(instance)
+                request.dbsession.flush()
+            except IntegrityError:
+                return {'error': 'something went wrong'}
 
             return HTTPFound(location=request.route_url('portfolio'), headers=headers)
 
         except DBAPIError:
             return Response(DB_ERR_MSG, content_type='text/plain', status=500)
-
-    return HTTPFound(location=request.route_url('home'))
 
 
 @view_config(route_name='logout')
