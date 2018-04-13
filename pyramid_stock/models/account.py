@@ -17,6 +17,7 @@ manager = bcrypt.BCRYPTPasswordManager()
 
 
 class Account(Base):
+    """class for account instance"""
     __tablename__ = 'account'
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, unique=True, nullable=False)
@@ -27,6 +28,9 @@ class Account(Base):
     stock = relationship("Stock", secondary=association_table, back_populates='account')
 
     def __init__(self, username, email, password, admin=False):
+        """
+        init account inctance
+        """
         self.username = username
         self.email = email
         self.password = manager.encode(password, 10)
@@ -35,6 +39,7 @@ class Account(Base):
 
     @classmethod
     def check_credentials(cls, request=None, username=None, password=None):
+        """check database"""
         if request.dbsession is None:
             raise DBAPIError
         is_authenticated = False
