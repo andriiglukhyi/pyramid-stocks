@@ -31,9 +31,9 @@ tests_require = [
 ]
 
 setup(
-    name='learning_journal',
+    name='pyramid_stock',
     version='1.0',
-    description='learning_journal',
+    description='pyramid_stock',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
         'Programming Language :: Python',
