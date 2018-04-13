@@ -6,7 +6,7 @@ from sqlalchemy import (
     Boolean
 )
 from .meta import Base
-
+"""assiciation table"""
 association_table = Table(
     'association', Base.metadata,
     Column('account_id', Integer, ForeignKey('account.id')),

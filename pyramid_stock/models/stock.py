@@ -14,6 +14,7 @@ from .meta import Base
 
 
 class Stock(Base):
+    """class for stock instance"""
     __tablename__ = 'stock'
     id = Column(Integer, primary_key=True)
     symbol = Column(String, nullable=False, unique=True)
