@@ -32,7 +32,7 @@ tests_require = [
 
 setup(
     name='learning_journal',
-    version='0.0',
+    version='1.0',
     description='learning_journal',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
