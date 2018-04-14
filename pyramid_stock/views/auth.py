@@ -1,4 +1,4 @@
-from pyramid.httpexceptions import HTTPFound, HTTPBadRequest, HTTPUnauthorized
+from pyramid.httpexceptions import HTTPFound, HTTPBadRequest, HTTPUnauthorized, HTTPNotFound
 from pyramid.security import NO_PERMISSION_REQUIRED, remember, forget
 from pyramid.response import Response
 from sqlalchemy.exc import DBAPIError, IntegrityError
@@ -34,25 +34,32 @@ def auth_view(request):
 
         except KeyError:
             return HTTPBadRequest()
-
-        try:
-            instance = Account(
-                username=username,
-                email=email,
-                password=password,
-            )
-
-            headers = remember(request, userid=instance.username)
+        user = request.dbsession.query(Account).filter(Account.username == username).one_or_none()
+        # import pdb; pdb.set_trace()
+        if user is None:
             try:
-                request.dbsession.add(instance)
-                request.dbsession.flush()
-            except IntegrityError:
-                return {'error': 'something went wrong'}
+                instance = Account(
+                    username=username,
+                    email=email,
+                    password=password,
+                )
 
-            return HTTPFound(location=request.route_url('portfolio'), headers=headers)
+                headers = remember(request, userid=instance.username)
+                try:
+                    request.dbsession.add(instance)
+                    request.dbsession.flush()
+                except IntegrityError:
+                    return {'error': 'something went wrong'}
 
-        except DBAPIError:
-            return Response(DB_ERR_MSG, content_type='text/plain', status=500)
+                return HTTPFound(location=request.route_url('portfolio'), headers=headers)
+            except DBAPIError:
+                return Response(DB_ERR_MSG, content_type='text/plain', status=500)
+        else:
+            message = "Sorry username already exist"
+            return HTTPNotFound(message)
+
+
+        
 
 
 @view_config(route_name='logout')

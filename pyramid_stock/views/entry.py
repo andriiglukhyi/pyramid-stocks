@@ -16,11 +16,14 @@ API_URL = ' https://api.iextrading.com/1.0'
     renderer='../templates/portfolio.jinja2')
 def entries_view(request):
     """portfolio wiwth all the stuff"""
-    if request.method == 'GET':
-        """get request to portfolio page"""
-        user = request.dbsession.query(Account).filter(
-                Account.username == request.authenticated_userid).first()
-        return {'stock': user.stock}
+    if request.authenticated_userid:
+        if request.method == 'GET':
+            """get request to portfolio page"""
+            user = request.dbsession.query(Account).filter(
+                    Account.username == request.authenticated_userid).first()
+            return {'stock': user.stock}
+    else:
+        return HTTPFound(location=request.route_url('autho')) 
 
     if request.method == 'POST':
         """post request to portfolio page"""
@@ -41,7 +44,7 @@ def entries_view(request):
                     setattr(stock, key, value)
             stock.account.append(user)
             request.dbsession.flush()
-            return HTTPFound(location=request.route_url('portfolio'))
+            return HTTPFound(location=request.route_url('autho'))
         raise HTTPServiceUnavailable     
 
 
@@ -67,19 +70,21 @@ def new_view(request):
     request_method='GET')
 def detail_view(request):
     """details about single item"""
-    try:
-        entry_id = request.matchdict['symbol']
-    except KeyError:
-        return HTTPNotFound()
-    try:
-        query = request.dbsession.query(Stock)
-        entry_detail = query.filter(Stock.account_id == request.authenticated_userid).filter(Stock.symbol == entry_id).one_or_none()
+    if request.authenticated_userid:
+        try:
+            entry_id = request.matchdict['symbol']
+        except KeyError:
+            return HTTPNotFound()
+        try:
+            query = request.dbsession.query(Stock)
+            entry_detail = query.filter(Stock.symbol == entry_id).one_or_none()
+            if entry_detail is None:
+                return HTTPNotFound('Sorry')
+            for item in entry_detail.account:
+                if item.username == request.authenticated_userid:
+                    return {"lst": entry_detail}
+        except DBAPIError:
+            return Response(DB_ERR_MSG, content_type='text/plain', status=500)
 
-    except DBAPIError:
-        return Response(DB_ERR_MSG, content_type='text/plain', status=500)
-
-    if entry_detail is None:
-        response = requests.get(API_URL + '/stock/{}/company'.format(entry_id))
-        data = response.json()        
-        return {"lst": data}
-    return {"lst": entry_detail}
+    else:
+        return HTTPFound(location=request.route_url('home'))
