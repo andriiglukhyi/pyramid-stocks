@@ -1,5 +1,10 @@
 {% extends "base.jinja2" %}
 
+{% if username %}
+{{username.message}}
+
+{% endif %}
+
 {% block content %}
 <div class="content">
   <h1>Registration</h1>
