@@ -4,7 +4,7 @@ cryptacular==1.4.1
 hupper==1.1
 idna==2.6
 Jinja2==2.10
-Mako==1.0.7
+Mako==1.2.2
 MarkupSafe==1.0
 PasteDeploy==1.5.2
 pbkdf2==1.3
